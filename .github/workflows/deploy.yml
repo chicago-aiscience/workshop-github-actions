@@ -33,11 +33,11 @@ jobs:
     name: Compute version
     uses: ./.github/workflows/version.yml
 
-  build-deploy:
+  build-and-deploy:
     name: Build + deploy container image
     needs: [lint-and-format, scan, test, version]
     if: needs.version.result == 'success'
-    uses: ./.github/workflows/build-deploy.yml
+    uses: ./.github/workflows/build-and-deploy.yml
     with:
       app_version: ${{ needs.version.outputs.app_version }}
     secrets: inherit
