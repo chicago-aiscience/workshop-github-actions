@@ -1,17 +1,17 @@
 name: Version
 
 on:
-    workflow_call:
-        outputs:
-            app_version:
-                description: Computed app version
-                value: ${{ jobs.version.outputs.app_version }}
+  workflow_call:
+    outputs:
+      app_version:
+        description: Computed app version
+        value: ${{ jobs.version.outputs.app_version }}
 
 jobs:
-    version:
+  version:
     runs-on: ubuntu-latest
     outputs:
-      app_version: ${{ jobs.version.outputs.app_version }}
+      app_version: ${{ steps.release.outputs.app_version }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4

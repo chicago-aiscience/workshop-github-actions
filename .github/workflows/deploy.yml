@@ -19,25 +19,25 @@ env:
 jobs:
   lint-and-format:
     name: Lint and format
-    uses: ./.github/workflows/reusable/lint-and-format.yml
+    uses: ./.github/workflows/lint-and-format.yml
 
   scan:
     name: Scan
-    uses: ./.github/workflows/reusable/scan.yml
+    uses: ./.github/workflows/scan.yml
 
   test:
     name: Tests
-    uses: ./.github/workflows/reusable/test.yml
+    uses: ./.github/workflows/test.yml
 
   version:
     name: Compute version
-    uses: ./.github/workflows/reusable/version.yml
+    uses: ./.github/workflows/version.yml
 
   build-deploy:
     name: Build + deploy container image
     needs: [lint-and-format, scan, test, version]
     if: needs.version.result == 'success'
-    uses: ./.github/workflows/reusable/build-deploy.yml
+    uses: ./.github/workflows/build-deploy.yml
     with:
       app_version: ${{ needs.version.outputs.app_version }}
     secrets: inherit
@@ -46,7 +46,7 @@ jobs:
     name: Tag + GitHub release
     needs: [version, build-deploy]
     if: needs.version.result == 'success'
-    uses: ./.github/workflows/reusable/release.yml
+    uses: ./.github/workflows/release.yml
     with:
       app_version: ${{ needs.version.outputs.app_version }}
     secrets: inherit
