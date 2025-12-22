@@ -1,0 +1,45 @@
+name: Build and Deploy
+
+on:
+    workflow_call:
+        inputs:
+            app_version:
+                description: Computed app version
+                type: string
+                required: true
+
+permissions:
+    contents: read
+    packages: write
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.RESOURCE_NAME_DOCKER }}
+          tags: |
+            type=pep440,pattern={{version}},value=${{ inputs.app_version }}
+            type=raw,value=${{ inputs.deploy_env }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          pull: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
