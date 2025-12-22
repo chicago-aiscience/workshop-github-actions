@@ -12,10 +12,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  REGISTRY: ghcr.io
-  RESOURCE_NAME_DOCKER: ${{ github.repository }}
-
 permissions:
   actions: read
   contents: write
@@ -46,6 +42,8 @@ jobs:
     uses: ./.github/workflows/container.yml
     with:
       app_version: ${{ needs.version.outputs.app_version }}
+      registry: ghcr.io
+      image: ${{ github.repository }}
     secrets: inherit
 
   release:
