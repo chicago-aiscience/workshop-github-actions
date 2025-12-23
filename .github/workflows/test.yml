@@ -19,11 +19,11 @@ jobs:
           version: "latest"
           python-version: ${{ matrix.python-version }}
 
-      - name: Check Python version
-        run: uv run python --version
-
       - name: Install
         run: uv sync
+
+      - name: Check Python version
+        run: uv run python --version
 
       - name: Execute tests
         run: uv run pytest -q
