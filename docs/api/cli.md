@@ -1,3 +1,0 @@
-# `sst.cli`
-
-::: sst.cli

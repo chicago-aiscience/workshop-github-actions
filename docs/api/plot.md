@@ -1,3 +1,0 @@
-# `sst.plot`
-
-::: sst.plot
